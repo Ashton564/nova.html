@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>novaOS Shell</title>
+  <style>
+    /* ===== Global reset ===== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: #000000;
+    }
+
+    /* ===== Desktop background (Aero Nova) ===== */
+    .desktop {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at top left, #1b4b7a 0, #02030a 40%, #000000 100%);
+      color: #ffffff;
+    }
+
+    /* ===== Taskbar ===== */
+    .taskbar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 40px;
+      background: rgba(10, 10, 10, 0.95);
+      border-top: 1px solid #202020;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      gap: 8px;
+    }
+
+    /* ===== Nova Orb (Start button) ===== */
+    .nova-orb {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #4fd0ff, #0060c0 60%, #001020 100%);
+      box-shadow: 0 0 8px rgba(79, 208, 255, 0.8);
+      border: 1px solid #1a8ad8;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nova-orb::after {
+      content: "";
+      position: absolute;
+      inset: 4px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .nova-orb-pulse {
+      animation: orbPulse 2.5s infinite;
+    }
+
+    @keyframes orbPulse {
+      0% { box-shadow: 0 0 8px rgba(79, 208, 255, 0.8); }
+      50% { box-shadow: 0 0 16px rgba(79, 208, 255, 1); }
+      100% { box-shadow: 0 0 8px rgba(79, 208, 255, 0.8); }
+    }
+
+    /* ===== Taskbar app area ===== */
+    .taskbar-apps {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex: 1;
+      padding-left: 4px;
+    }
+
+    .taskbar-spacer {
+      flex: 1;
+    }
+
+    /* ===== Clock ===== */
+    .taskbar-clock {
+      color: #e0e0e0;
+      font-size: 12px;
+      padding: 0 8px;
+    }
+
+    /* ===== Start menu (placeholder) ===== */
+    .start-menu {
+      position: absolute;
+      left: 4px;
+      bottom: 44px;
+      width: 260px;
+      height: 320px;
+      background: rgba(10, 10, 10, 0.96);
+      border-radius: 6px;
+      border: 1px solid #2a2a2a;
+      box-shadow: 0 0 18px rgba(0, 0, 0, 0.8);
+      display: none;
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+    }
+
+    .start-menu-header {
+      padding: 8px;
+      border-bottom: 1px solid #303030;
+      font-size: 13px;
+      color: #b0d8ff;
+    }
+
+    .start-menu-list {
+      padding: 6px;
+      font-size: 13px;
+    }
+
+    .start-menu-item {
+      padding: 4px 6px;
+      border-radius: 3px;
+      cursor: pointer;
+      color: #e0e0e0;
+    }
+
+    .start-menu-item:hover {
+      background: rgba(80, 160, 255, 0.2);
+    }
+
+    .start-menu-footer {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 6px 8px;
+      border-top: 1px solid #303030;
+      font-size: 12px;
+      color: #a0a0a0;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* ===== Desktop icons placeholder ===== */
+    .desktop-icons {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      font-size: 12px;
+    }
+
+    .desktop-icon {
+      width: 72px;
+      text-align: center;
+      color: #e0e0e0;
+      cursor: default;
+      user-select: none;
+    }
+
+    .desktop-icon-img {
+      width: 32px;
+      height: 32px;
+      margin: 0 auto 4px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, #4fd0ff, #0060c0);
+      box-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
+    }
+  </style>
+</head>
+<body>
+  <div class="desktop" id="desktop">
+    <!-- Desktop icons -->
+    <div class="desktop-icons">
+      <div class="desktop-icon">
+        <div class="desktop-icon-img"></div>
+        <div>NovaPad++</div>
+      </div>
+      <div class="desktop-icon">
+        <div class="desktop-icon-img"></div>
+        <div>NovaIDE</div>
+      </div>
+      <div class="desktop-icon">
+        <div class="desktop-icon-img"></div>
+        <div>NovaSphere</div>
+      </div>
+    </div>
+
+    <!-- Start menu -->
+    <div class="start-menu" id="startMenu">
+      <div class="start-menu-header">
+        novaOS
+      </div>
+      <div class="start-menu-list">
+        <div class="start-menu-item">NovaPad++</div>
+        <div class="start-menu-item">NovaIDE</div>
+        <div class="start-menu-item">NovaSphere</div>
+        <div class="start-menu-item">Control Center</div>
+        <div class="start-menu-item">Nova Store</div>
+      </div>
+      <div class="start-menu-footer">
+        <span>ideOS+ · novaOS</span>
+        <span>v0.1 shell</span>
+      </div>
+    </div>
+
+    <!-- Taskbar -->
+    <div class="taskbar">
+      <div class="nova-orb nova-orb-pulse" id="novaOrb"></div>
+      <div class="taskbar-apps" id="taskbarApps">
+        <!-- App buttons will go here in later chunks -->
+      </div>
+      <div class="taskbar-spacer"></div>
+      <div class="taskbar-clock" id="taskbarClock"></div>
+    </div>
+  </div>
+
+  <script>
+    const novaOrb = document.getElementById("novaOrb");
+    const startMenu = document.getElementById("startMenu");
+    const clock = document.getElementById("taskbarClock");
+
+    // Toggle Start menu
+    novaOrb.addEventListener("click", () => {
+      const visible = startMenu.style.display === "block";
+      startMenu.style.display = visible ? "none" : "block";
+    });
+
+    // Simple clock
+    function updateClock() {
+      const now = new Date();
+      const h = now.getHours().toString().padStart(2, "0");
+      const m = now.getMinutes().toString().padStart(2, "0");
+      clock.textContent = `${h}:${m}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+  </script>
+</body>
+</html>
